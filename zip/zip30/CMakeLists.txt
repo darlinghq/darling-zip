@@ -86,3 +86,11 @@ target_link_libraries(zipsplit z)
 install(TARGETS zip zipcloak zipnote zipsplit
 	DESTINATION libexec/darling/usr/bin)
 
+install(FILES
+	man/zip.1
+	man/zipcloak.1
+	man/zipnote.1
+	man/zipsplit.1
+
+	DESTINATION libexec/darling/usr/share/man/man1
+)

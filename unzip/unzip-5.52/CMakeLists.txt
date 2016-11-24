@@ -100,3 +100,12 @@ install(TARGETS unzip zipinfo funzip unzipsfx
 install(PROGRAMS unix/zipgrep
 	DESTINATION libexec/darling/usr/bin)
 
+install(FILES
+	man/funzip.1
+	man/unzip.1
+	man/unzipsfx.1
+	man/zipgrep.1
+	man/zipinfo.1
+
+	DESTINATION libexec/darling/usr/share/man/man1
+)
