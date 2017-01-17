@@ -17,20 +17,18 @@ add_definitions(
 )
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -U_POSIX_C_SOURCE -D__DARWIN_UNIX03 -nostdinc -fblocks -fPIC -ggdb -O0")
-set(CMAKE_EXE_LINKER_FLAGS "-nodefaultlibs -nostdlib -Wl,--version-script=${DARLING_TOP_DIRECTORY}/darwin.map")
-#set(CMAKE_SHARED_LINKER_FLAGS "-nodefaultlibs -Wl,--version-script=${DARLING_TOP_DIRECTORY}/darwin.map")
 
-include_directories(${DARLING_TOP_DIRECTORY}/src/libc/include/malloc)
-include_directories(${DARLING_TOP_DIRECTORY}/src/libc/include/FreeBSD)
-include_directories(${DARLING_TOP_DIRECTORY}/src/libc/include/NetBSD)
-include_directories(${DARLING_TOP_DIRECTORY}/src/libc/gen)
-include_directories(${DARLING_TOP_DIRECTORY}/src/libc/darwin)
-include_directories(${DARLING_TOP_DIRECTORY}/src/libc/stdtime/FreeBSD)
-include_directories(${DARLING_TOP_DIRECTORY}/src/launchd/liblaunch)
-include_directories(${DARLING_TOP_DIRECTORY}/src/external/libdispatch)
-include_directories(${DARLING_TOP_DIRECTORY}/src/external/zlib)
-include_directories(${DARLING_TOP_DIRECTORY}/src/external/bzip2)
-include_directories(${DARLING_TOP_DIRECTORY}/src/ncurses/include)
+include_directories(${CMAKE_SOURCE_DIR}/src/libc/include/malloc)
+include_directories(${CMAKE_SOURCE_DIR}/src/libc/include/FreeBSD)
+include_directories(${CMAKE_SOURCE_DIR}/src/libc/include/NetBSD)
+include_directories(${CMAKE_SOURCE_DIR}/src/libc/gen)
+include_directories(${CMAKE_SOURCE_DIR}/src/libc/darwin)
+include_directories(${CMAKE_SOURCE_DIR}/src/libc/stdtime/FreeBSD)
+include_directories(${CMAKE_SOURCE_DIR}/src/launchd/liblaunch)
+include_directories(${CMAKE_SOURCE_DIR}/src/external/libdispatch)
+include_directories(${CMAKE_SOURCE_DIR}/src/external/zlib)
+include_directories(${CMAKE_SOURCE_DIR}/src/external/bzip2)
+include_directories(${CMAKE_SOURCE_DIR}/src/ncurses/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 include(InstallSymlink)
@@ -47,8 +45,27 @@ set(common_sources
 	ttyio.c
 	util.c
 	zbz2err.c
+	zipfile.c
+	unix/unix.c
+	zipup.c
 )
 add_library(zip_common OBJECT ${common_sources})
+
+set(commonutil_sources
+	crc32.c
+	fileio.c
+	util.c
+	zipfile.c
+	ttyio.c
+	unix/unix.c
+	globals.c
+)
+add_library(zip_commonutil OBJECT ${commonutil_sources})
+set_target_properties(zip_commonutil PROPERTIES COMPILE_FLAGS "-DUTIL")
+
+add_library(zip_commonutilcrypt OBJECT crypt.c)
+set_target_properties(zip_commonutilcrypt PROPERTIES COMPILE_FLAGS "-DUTIL")
+
 
 set(zip_sources
 	zip.c
@@ -60,7 +77,8 @@ target_link_libraries(zip z)
 
 set(zipcloak_sources
 	zipcloak.c
-	$<TARGET_OBJECTS:zip_common>
+	$<TARGET_OBJECTS:zip_commonutil>
+	$<TARGET_OBJECTS:zip_commonutilcrypt>
 )
 
 add_darling_executable(zipcloak ${zipcloak_sources})
@@ -68,20 +86,21 @@ target_link_libraries(zipcloak z)
 
 set(zipnote_sources
 	zipnote.c
-	$<TARGET_OBJECTS:zip_common>
+	$<TARGET_OBJECTS:zip_commonutil>
 )
 
-add_darling_executable(zipnote ${zipcloak_sources})
+add_darling_executable(zipnote ${zipnote_sources})
 target_link_libraries(zipnote z)
 
 set(zipsplit_sources
 	zipsplit.c
-	$<TARGET_OBJECTS:zip_common>
+	#zip.c
+	$<TARGET_OBJECTS:zip_commonutil>
 )
 
 add_darling_executable(zipsplit ${zipsplit_sources})
 target_link_libraries(zipsplit z)
-
+#set_target_properties(zipsplit PROPERTIES COMPILE_FLAGS "-DUSE_ZIPMAIN")
 
 install(TARGETS zip zipcloak zipnote zipsplit
 	DESTINATION libexec/darling/usr/bin)

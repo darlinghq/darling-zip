@@ -20,63 +20,48 @@ add_definitions(
 )
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -U_POSIX_C_SOURCE -D__DARWIN_UNIX03 -nostdinc -fblocks -fPIC -ggdb -O0")
-set(CMAKE_EXE_LINKER_FLAGS "-nodefaultlibs -nostdlib -Wl,--version-script=${DARLING_TOP_DIRECTORY}/darwin.map")
-#set(CMAKE_SHARED_LINKER_FLAGS "-nodefaultlibs -Wl,--version-script=${DARLING_TOP_DIRECTORY}/darwin.map")
 
-include_directories(${DARLING_TOP_DIRECTORY}/src/libc/include/malloc)
-include_directories(${DARLING_TOP_DIRECTORY}/src/libc/include/FreeBSD)
-include_directories(${DARLING_TOP_DIRECTORY}/src/libc/include/NetBSD)
-include_directories(${DARLING_TOP_DIRECTORY}/src/libc/gen)
-include_directories(${DARLING_TOP_DIRECTORY}/src/libc/darwin)
-include_directories(${DARLING_TOP_DIRECTORY}/src/libc/stdtime/FreeBSD)
-include_directories(${DARLING_TOP_DIRECTORY}/src/launchd/liblaunch)
-include_directories(${DARLING_TOP_DIRECTORY}/src/external/libdispatch)
-include_directories(${DARLING_TOP_DIRECTORY}/src/external/zlib)
-include_directories(${DARLING_TOP_DIRECTORY}/src/external/bzip2)
-include_directories(${DARLING_TOP_DIRECTORY}/src/ncurses/include)
+include_directories(${CMAKE_SOURCE_DIR}/src/libc/include/malloc)
+include_directories(${CMAKE_SOURCE_DIR}/src/libc/include/FreeBSD)
+include_directories(${CMAKE_SOURCE_DIR}/src/libc/include/NetBSD)
+include_directories(${CMAKE_SOURCE_DIR}/src/libc/gen)
+include_directories(${CMAKE_SOURCE_DIR}/src/libc/darwin)
+include_directories(${CMAKE_SOURCE_DIR}/src/libc/stdtime/FreeBSD)
+include_directories(${CMAKE_SOURCE_DIR}/src/launchd/liblaunch)
+include_directories(${CMAKE_SOURCE_DIR}/src/external/libdispatch)
+include_directories(${CMAKE_SOURCE_DIR}/src/external/zlib)
+include_directories(${CMAKE_SOURCE_DIR}/src/external/bzip2)
+include_directories(${CMAKE_SOURCE_DIR}/src/ncurses/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 include(InstallSymlink)
 set(BINARY_PACKAGING_MODE ON)
 
-set(common_sources
+set(unzip_sources
 	crc32.c
-	crypt.c
 	envargs.c
 	explode.c
-	extract.c
 	globals.c
 	inflate.c
-	list.c
 	match.c
-	process.c
 	timezone.c
 	ttyio.c
 	unreduce.c
 	unshrink.c
+	list.c
+	extract.c
+	crypt.c
 	unix/unix.c
-)
-add_library(unzip_common OBJECT ${common_sources})
-
-set(unzip_sources
-	unzip.c
 	fileio.c
+	zipinfo.c
+	process.c
+	unzip.c
+	crypt.c
 	crctab.c
-	$<TARGET_OBJECTS:unzip_common>
 )
 
 add_darling_executable(unzip ${unzip_sources})
 target_link_libraries(unzip z)
-
-set(zipinfo_sources
-	zipinfo.c
-	fileio.c
-	unzip.c
-	$<TARGET_OBJECTS:unzip_common>
-)
-
-add_darling_executable(zipinfo ${zipinfo_sources})
-target_link_libraries(zipinfo z)
 
 set(funzip_sources
 	funzip.c
@@ -89,13 +74,28 @@ set(funzip_sources
 
 add_darling_executable(funzip ${funzip_sources})
 target_link_libraries(funzip z)
-set_target_properties(funzip PROPERTIES COMPILE_DEFINITIONS "FUNZIP")
+set_target_properties(funzip PROPERTIES COMPILE_FLAGS "-DFUNZIP")
 
-add_darling_executable(unzipsfx ${unzip_sources})
+set(unzipsfx_sources
+	unzip.c
+	crctab.c
+	crypt.c
+	extract.c
+	fileio.c
+	globals.c
+	inflate.c
+	match.c
+	process.c
+	ttyio.c
+	unix/unix.c
+)
+
+add_darling_executable(unzipsfx ${unzipsfx_sources})
 target_link_libraries(unzipsfx z)
-set_target_properties(unzipsfx PROPERTIES COMPILE_DEFINITIONS "SFX")
+set_target_properties(unzipsfx PROPERTIES COMPILE_FLAGS "-DSFX")
 
-install(TARGETS unzip zipinfo funzip unzipsfx
+InstallSymlink("unzip" "${CMAKE_INSTALL_PREFIX}/libexec/darling/usr/bin/zipinfo")
+install(TARGETS unzip funzip unzipsfx
 	DESTINATION libexec/darling/usr/bin)
 install(PROGRAMS unix/zipgrep
 	DESTINATION libexec/darling/usr/bin)
