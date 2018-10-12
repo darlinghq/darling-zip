@@ -9,7 +9,7 @@ endif(COMMAND cmake_policy)
 include(darling_exe)
 add_definitions(-DTARGET_OS_MAC=1)
 add_definitions(-D__APPLE__ -D__DYNAMIC__)
-add_definitions(-DUSE_ZLIB -DUNIX -DUNICODE_SUPPORT -DCRYPT)
+add_definitions(-DUNIX -DUNICODE_SUPPORT -DCRYPT)
 
 # Hide warnings
 add_definitions(
