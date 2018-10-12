@@ -1538,7 +1538,7 @@ local zoff_t filecompress(z_entry, cmpr_method)
         err = deflate(&zstrm, Z_FINISH);
         if (maybe_stored) {
             if (err == Z_STREAM_END && zstrm.total_out >= zstrm.total_in &&
-                fseekable(zipfile)) {
+                fseekable(y)) {
                 /* deflation does not reduce size, switch to STORE method */
                 unsigned len_out = (unsigned)zstrm.total_in;
                 if (zfwrite(f_ibuf, 1, len_out) != len_out) {
@@ -1874,7 +1874,7 @@ int *cmpr_method;
              */
             if (err == BZ_STREAM_END
                 && bstrm.total_out_lo32 >= bstrm.total_in_lo32
-                && fseekable(zipfile)) {
+                && fseekable(y)) {
                 /* BZIP2 compress does not reduce size,
                    switch to STORE method */
                 unsigned len_out = (unsigned)bstrm.total_in_lo32;
