@@ -73,7 +73,6 @@ set(zip_sources
 )
 
 add_darling_executable(zip ${zip_sources})
-target_link_libraries(zip z)
 
 set(zipcloak_sources
 	zipcloak.c
@@ -82,7 +81,6 @@ set(zipcloak_sources
 )
 
 add_darling_executable(zipcloak ${zipcloak_sources})
-target_link_libraries(zipcloak z)
 
 set(zipnote_sources
 	zipnote.c
@@ -90,7 +88,6 @@ set(zipnote_sources
 )
 
 add_darling_executable(zipnote ${zipnote_sources})
-target_link_libraries(zipnote z)
 
 set(zipsplit_sources
 	zipsplit.c
@@ -99,7 +96,6 @@ set(zipsplit_sources
 )
 
 add_darling_executable(zipsplit ${zipsplit_sources})
-target_link_libraries(zipsplit z)
 #set_target_properties(zipsplit PROPERTIES COMPILE_FLAGS "-DUSE_ZIPMAIN")
 
 install(TARGETS zip zipcloak zipnote zipsplit
