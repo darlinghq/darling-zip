@@ -49,7 +49,7 @@ set(common_sources
 	unix/unix.c
 	zipup.c
 )
-add_library(zip_common OBJECT ${common_sources})
+add_darling_object_library(zip_common ${common_sources})
 
 set(commonutil_sources
 	crc32.c
@@ -60,10 +60,10 @@ set(commonutil_sources
 	unix/unix.c
 	globals.c
 )
-add_library(zip_commonutil OBJECT ${commonutil_sources})
+add_darling_object_library(zip_commonutil ${commonutil_sources})
 set_target_properties(zip_commonutil PROPERTIES COMPILE_FLAGS "-DUTIL")
 
-add_library(zip_commonutilcrypt OBJECT crypt.c)
+add_darling_object_library(zip_commonutilcrypt crypt.c)
 set_target_properties(zip_commonutilcrypt PROPERTIES COMPILE_FLAGS "-DUTIL")
 
 
