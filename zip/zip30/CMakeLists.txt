@@ -16,17 +16,6 @@ add_definitions(
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -U_POSIX_C_SOURCE -D__DARWIN_UNIX03 -nostdinc -fblocks -fPIC -ggdb -O0")
 
-include_directories(${CMAKE_SOURCE_DIR}/src/libc/include/malloc)
-include_directories(${CMAKE_SOURCE_DIR}/src/libc/include/FreeBSD)
-include_directories(${CMAKE_SOURCE_DIR}/src/libc/include/NetBSD)
-include_directories(${CMAKE_SOURCE_DIR}/src/libc/gen)
-include_directories(${CMAKE_SOURCE_DIR}/src/libc/darwin)
-include_directories(${CMAKE_SOURCE_DIR}/src/libc/stdtime/FreeBSD)
-include_directories(${CMAKE_SOURCE_DIR}/src/launchd/liblaunch)
-include_directories(${CMAKE_SOURCE_DIR}/src/external/libdispatch)
-include_directories(${CMAKE_SOURCE_DIR}/src/external/zlib)
-include_directories(${CMAKE_SOURCE_DIR}/src/external/bzip2)
-include_directories(${CMAKE_SOURCE_DIR}/src/ncurses/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 include(InstallSymlink)
