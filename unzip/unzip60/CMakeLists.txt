@@ -7,7 +7,7 @@ if(COMMAND cmake_policy)
 endif(COMMAND cmake_policy)
 
 include(darling_exe)
-add_definitions(-DUNIX -DUNICODE_SUPPORT -DCRYPT -DUSE_ZLIB)
+add_definitions(-DUNIX -DUNICODE_SUPPORT -DCRYPT -DLARGE_FILE_SUPPORT -DBSD)
 
 # Hide warnings
 add_definitions(
@@ -26,25 +26,23 @@ set(BINARY_PACKAGING_MODE ON)
 
 set(unzip_sources
 	crc32.c
+	crypt.c
 	envargs.c
 	explode.c
+	extract.c
+	fileio.c
 	globals.c
 	inflate.c
+	list.c
 	match.c
-	timezone.c
+	process.c
 	ttyio.c
+	ubz2err.c
+	unix/unix.c
 	unreduce.c
 	unshrink.c
-	list.c
-	extract.c
-	crypt.c
-	unix/unix.c
-	fileio.c
-	zipinfo.c
-	process.c
 	unzip.c
-	crypt.c
-	crctab.c
+	zipinfo.c
 )
 
 add_darling_executable(unzip ${unzip_sources})
@@ -65,7 +63,7 @@ set_target_properties(funzip PROPERTIES COMPILE_FLAGS "-DFUNZIP")
 
 set(unzipsfx_sources
 	unzip.c
-	crctab.c
+	crc32.c
 	crypt.c
 	extract.c
 	fileio.c
@@ -74,6 +72,7 @@ set(unzipsfx_sources
 	match.c
 	process.c
 	ttyio.c
+	ubz2err.c
 	unix/unix.c
 )
 
