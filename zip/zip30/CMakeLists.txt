@@ -48,10 +48,10 @@ set(commonutil_sources
 	globals.c
 )
 add_darling_object_library(zip_commonutil ${commonutil_sources})
-set_target_properties(zip_commonutil PROPERTIES COMPILE_FLAGS "-DUTIL")
+target_compile_definitions(zip_commonutil PRIVATE UTIL)
 
 add_darling_object_library(zip_commonutilcrypt crypt.c)
-set_target_properties(zip_commonutilcrypt PROPERTIES COMPILE_FLAGS "-DUTIL")
+target_compile_definitions(zip_commonutilcrypt PRIVATE UTIL)
 
 
 set(zip_sources
